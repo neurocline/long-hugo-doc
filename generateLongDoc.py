@@ -51,6 +51,10 @@ for folder in folders:
 
     for mdfile in os.listdir(fullPath):
         mdFilePath = fullPath + "/" + mdfile
+        
+        if os.path.isdir(mdFilePath):
+          print("\nSkipping directory: " + mdFilePath + "\n");
+          continue
 
         print("Reading " + mdFilePath)
 
@@ -59,7 +63,7 @@ for folder in folders:
         linktitle = ""
         weight = 999
         content = ""
-        md = open(mdFilePath, 'r')
+        md = open(mdFilePath, 'r', encoding='utf-8')
         for line in iter(md.readline, ''):
             if dividerCount == 2:
                 content = content + line
@@ -97,7 +101,7 @@ for folder in folders:
         fullDocument = fullDocument + documents[key]
         fullIndex = fullIndex + index[key]
 
-f = open(args.output, "w")
+f = open(args.output, "w", encoding='utf-8')
 f.write("This is the documentation of [Hugo](http://gohugo.io/) condensed into one long page. I did this to make the documentation easier to search and navigate. This page was automatically generated using a Python script using the documentation available at Hugo's GitHub repository.\n")
 f.write(fullIndex)
 f.write(fullDocument)
