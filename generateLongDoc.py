@@ -29,9 +29,9 @@ folders = ["about",
            "hosting-and-deployment",
            "contribute"]
 
-titleRe = re.compile(r'^title: (.*)')
-linktitleRe = re.compile(r'^linktitle: (.*)')
-weightRe = re.compile(r'^weight: ([0-9]+)')
+titleRe = re.compile(r'^title\s*: (.*)')
+linktitleRe = re.compile(r'^linktitle\s*: (.*)')
+weightRe = re.compile(r'^weight\s*: ([0-9]+)')
 dividerRe = re.compile(r'^---')
 linksBeforeRe = re.compile(r'\[(.*?)\]\(\/(.*?)\/(.*?)\/?\)', re.S)
 

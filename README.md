@@ -46,7 +46,7 @@ This is the documentation of [Hugo](http://gohugo.io/) condensed into one long p
   * <a href="#content-management.toc.md">Table of Contents</a>
   * <a href="#content-management.comments.md">Comments</a>
   * <a href="#content-management.multilingual.md">Multilingual and i18n</a>
-  * <a href="#content-management.page-bundles.md"></a>
+  * <a href="#content-management.page-bundles.md">Page Bundles</a>
   * <a href="#content-management.page-resources.md">Page Resources</a>
 
 ## templates
@@ -5133,7 +5133,7 @@ If there is more than one language defined, the `LanguagePrefix` variable will e
 [singles]: /templates/single-page-templates/
 <a name="content-management.page-bundles.md"></a>
 
-# 
+# "Page Bundles"
 
 
 Page Bundles are a way to organize the content files. It's useful for
@@ -5303,7 +5303,7 @@ matter.
 [^fn:1]: The `.md` extension is just an example. The extension can be `.html`, `.json` or any of any valid MIME type.
 <a name="content-management.page-resources.md"></a>
 
-# 
+# "Page Resources"
 
 
 ## Properties
