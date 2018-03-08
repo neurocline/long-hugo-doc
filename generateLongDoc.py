@@ -116,6 +116,12 @@ def main():
     f.write(fullDocument)
     f.close()
 
+# TBD all this quoting breaks if you have template constructs inside backticked or code-fenced
+# blocks. Those are already quoted and thus don't need more quoting. Sigh.
+# Also, really short things like {{% note %}} should probably just be backticked and not
+# code-fenced. The rule is probably "if the whole template is on a single line, backtick it,
+# and use code fences for longer constructs.
+
 # Look for template constructs and quote them. This handles both
 # arbitrary templates, which are turned into code fences individually, and then
 # paired "{{< code ... >}} ... {{< /code >}} blocks, which get turned into
