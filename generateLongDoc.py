@@ -58,7 +58,7 @@ def main():
 
         for mdfile in os.listdir(fullPath):
             mdFilePath = fullPath + "/" + mdfile
-            
+
             if os.path.isdir(mdFilePath):
               print("\nSkipping directory: " + mdFilePath + "\n");
               continue
@@ -71,7 +71,7 @@ def main():
             weight = 999
             content = ""
             md = open(mdFilePath, 'r', encoding='utf-8')
-            inTemplate = False
+            inTemplate = 0
             for line in iter(md.readline, ''):
                 if dividerCount == 2:
                     line, inTemplate = preprocess(line, inTemplate)
@@ -116,45 +116,71 @@ def main():
     f.write(fullDocument)
     f.close()
 
-# Look for template constructs and quote them
+# Look for template constructs and quote them. This handles both
+# arbitrary templates, which are turned into code fences individually, and then
+# paired "{{< code ... >}} ... {{< /code >}} blocks, which get turned into
+# code fences covering the whole construct. This is still not enough to prevent the
+# unified file from turning into garbage eventually, but it helps a lot.
 def preprocess(line, inTemplate):
 
     # If we are not in a template, look for '{{'
-    if not inTemplate:
+    if inTemplate == 0:
         idx = line.find('{{')
-        
+
         # If we see no {{ characters, we can return the whole line
         # (still not in a template)
         if idx == -1:
             return line, inTemplate
-      
+
+        # We are about to enter a template. Handle {{< code specially, this
+        # requires a {{< /code >}} block to exit quoted mode
+        if line[idx:idx+8] == "{{< code":
+            inTemplate = 2
+
         # Otherwise, we have text before the template starts,
         # and then text after that we have to process
+        else:
+            inTemplate = 1
+
         if idx > 0:
             before = line[:idx] + "\n" + "```\n"
         else:
             before = "```\n"
-        after, inTemplate = preprocess(line[idx:], True)
+
+        after, inTemplate = preprocess(line[idx:], inTemplate)
         return before+after, inTemplate
 
-    # Otherwise, we are in an template, so look for '}}'
+    # If we are in a template, look for the end of it
     else:
-        idx = line.find('}}')
-        
-        # If we see no }} characters, we can return the whole line
+        # If we are in a {{< code ..>}} block, then we don't exit quoted
+        # mode until we see the entire {{< /code >}} token
+        if inTemplate == 2:
+            idx = line.find('{{< /code >}}')
+            if idx != -1:
+                idx += 13
+
+        # Otherwise, }} is sufficient
+        else:
+            idx = line.find('}}')
+            if idx != -1:
+                idx += 2
+
+        # If we see no termination of the template, we can return the whole line
         # (still in the template)
         if idx == -1:
             return line, inTemplate
-      
+        inTemplate = 0
+
         # Close the template and parse the rest of the line,
         # which is no longer in a template
-        if idx+3 < len(line):
-            before = line[:idx+2] + "\n" + "```\n"
-            after, inTemplate = preprocess(line[idx+2:], False)
+        if idx+1 < len(line):
+            before = line[:idx] + "\n" + "```\n"
+            after, inTemplate = preprocess(line[idx:], inTemplate)
         else:
             before = line + "```\n"
             after = ""
-            inTemplate = False
+            inTemplate = 0
+ 
         return before+after, inTemplate
 
 # -----------------------------------------------------------------------------------------------
