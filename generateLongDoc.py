@@ -27,7 +27,13 @@ folders = ["about",
            "troubleshooting",
            "tools",
            "hosting-and-deployment",
-           "contribute"]
+           "contribute",
+           #"maintenance",
+           #"news",
+           #"readfiles",
+           #"release-notes",
+           #"showcase",
+          ]
 
 titleRe = re.compile(r'^title\s*: (.*)')
 linktitleRe = re.compile(r'^linktitle\s*: (.*)')
